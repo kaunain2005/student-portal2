@@ -15,8 +15,8 @@ const GrowthChart = () => {
     labels: ["Total Courses", "Ongoing Courses", "Completed", "Upcoming"],
     datasets: [
       {
-        label: 'My First Dataset',
-        data: [55, 25, 15, 5],
+        label: 'Courses',
+        data: [5,3,1,1],
         backgroundColor: ["#2196F3", "#6A1B9A", "#FBC02D", "#FF6D00"],
         borderWidth: 3,
       },
@@ -24,16 +24,8 @@ const GrowthChart = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      {/* Larger Chart Container */}
-      <div className="relative flex w-90 h-80"> {/* Set width & height */}
-        <Doughnut data={data} options={{ cutout: "80%", maintainAspectRatio: false }} />
-        
-        {/* Percentage Text Inside */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <h2 className="text-xl font-bold">Available Courses</h2>
-        </div>
-      </div>
+    <>
+        <Doughnut data={data} options={{ cutout: "80%" }} />
 
       {/* Legend */}
       <div className="mt-6 text-gray-700 text-base space-y-2">
@@ -50,7 +42,7 @@ const GrowthChart = () => {
           <span className="w-4 h-4 bg-orange-500 rounded-full mr-2"></span> Advertisement - 5%
         </p>
       </div>
-    </div>
+    </>
   );
 };
 

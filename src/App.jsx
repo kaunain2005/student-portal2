@@ -18,6 +18,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ProfileCard from "./components/ProfileCard";
 import CoursePage from "./pages/CoursePage";
 import Dashboard from "./pages/Dashboard";
+import HomeDashboard from "./pages/CourseDashboard";
 
 
 const Layout = ({ children }) => {
@@ -81,6 +82,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/course-dashboard"
+          element={
+            <ProtectedRoute>
+              <HomeDashboard />
             </ProtectedRoute>
           }
         />
