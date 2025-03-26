@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-export default function CourseGallery() {
+export default function CourseCarousel({ fetchTopCourses = false, apiUrl }) {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/allcourses")
+    fetch(apiUrl || "http://localhost:5000/api/allcourses")
       .then((response) => response.json())
       .then((data) => {
-        // Sort courses by start date (most recent first) and take the top 3
-        const sortedCourses = data
-          .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
-          .slice(0, 3);
+        // Decide whether to fetch top 3 courses or all courses
+        const sortedCourses = fetchTopCourses
+          ? data
+              .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
+              .slice(0, 3)
+          : data;
         setCourses(sortedCourses);
         setLoading(false);
       })
@@ -21,12 +23,14 @@ export default function CourseGallery() {
         setError(true);
         setLoading(false);
       });
-  }, []);
+  }, [fetchTopCourses, apiUrl]);
 
   return (
     <div className="container mx-auto p-20 bg-black">
       <h2 className="text-3xl text-white font-bold text-center mb-15">
-        🚀 Explore & Level Up: Our Top Courses 🎯📚
+        {fetchTopCourses
+          ? "🚀 Explore & Level Up: Our Top Courses 🎯📚"
+          : "🎓 Discover All Our Courses"}
       </h2>
       <div className="grid md:grid-cols-3 gap-6">
         {(loading || error ? Array(3).fill({}) : courses).map(

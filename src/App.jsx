@@ -19,6 +19,8 @@ import ProfileCard from "./components/ProfileCard";
 import CoursePage from "./pages/CoursePage";
 import Dashboard from "./pages/Dashboard";
 import HomeDashboard from "./pages/CourseDashboard";
+import AddCoursePage from "./pages/courses/AddCoursePage";
+import DeleteCoursePage from "./pages/courses/DeleteCoursePage";
 
 
 const Layout = ({ children }) => {
@@ -90,6 +92,22 @@ function App() {
           element={
             <ProtectedRoute>
               <HomeDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/course-dashboard/add-course"
+          element={
+            <ProtectedRoute>
+              <AddCoursePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/course-dashboard/delete-course"
+          element={
+            <ProtectedRoute>
+              <DeleteCoursePage />
             </ProtectedRoute>
           }
         />

@@ -1,11 +1,11 @@
 import HeroSection from "../components/CourseSection/HeroSection";
-import CourseList from "../components/CourseSection/CourseList";
+import CourseCarousel from "../components/HomeSections/CourseCarousel";
 
 const CoursePage = () => {
   return (
     <div>
       <HeroSection />
-      <CourseList />
+      <CourseCarousel apiUrl="http://localhost:5000/api/allcourses" />
     </div>
   );
 };
