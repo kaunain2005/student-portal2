@@ -5,7 +5,12 @@ const CoursePage = () => {
   return (
     <div>
       <HeroSection />
-      <CourseCarousel apiUrl="http://localhost:5000/api/allcourses" />
+      <CourseCarousel
+        buttonText="Enroll Now"
+        onButtonClick={(course) => {
+          console.log("Enroll clicked for", course);
+        }}
+      />
     </div>
   );
 };

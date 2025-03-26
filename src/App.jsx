@@ -19,7 +19,9 @@ import ProfileCard from "./components/ProfileCard";
 import CoursePage from "./pages/CoursePage";
 import Dashboard from "./pages/Dashboard";
 import HomeDashboard from "./pages/CourseDashboard";
+// Course Manangement
 import AddCoursePage from "./pages/courses/AddCoursePage";
+import UpdateCoursePage from "./pages/courses/UpdateCoursePage";
 import DeleteCoursePage from "./pages/courses/DeleteCoursePage";
 
 
@@ -95,11 +97,20 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Course Management start */}
         <Route
           path="/dashboard/course-dashboard/add-course"
           element={
             <ProtectedRoute>
               <AddCoursePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/course-dashboard/update-course"
+          element={
+            <ProtectedRoute>
+              <UpdateCoursePage />
             </ProtectedRoute>
           }
         />
@@ -110,7 +121,8 @@ function App() {
               <DeleteCoursePage />
             </ProtectedRoute>
           }
-        />
+          />
+          {/* Course Managemnet Ends */}
         <Route
           path="/profile"
           element={
@@ -119,7 +131,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>

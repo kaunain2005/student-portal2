@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-export default function CourseCarousel({ fetchTopCourses = false, apiUrl }) {
+export default function CourseCarousel({
+  fetchTopCourses = false,
+  apiUrl,
+  buttonText = "Enroll Now",
+  onButtonClick = () => {},
+  showModal = false,
+  setShowModal = () => {},
+  modalContent = null,
+}) {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -10,7 +18,6 @@ export default function CourseCarousel({ fetchTopCourses = false, apiUrl }) {
     fetch(apiUrl || "http://localhost:5000/api/allcourses")
       .then((response) => response.json())
       .then((data) => {
-        // Decide whether to fetch top 3 courses or all courses
         const sortedCourses = fetchTopCourses
           ? data
               .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
@@ -24,6 +31,20 @@ export default function CourseCarousel({ fetchTopCourses = false, apiUrl }) {
         setLoading(false);
       });
   }, [fetchTopCourses, apiUrl]);
+
+  // Button color logic
+  const getButtonColor = (text) => {
+    switch (text.toLowerCase()) {
+      case "update course":
+        return "bg-yellow-600 hover:bg-yellow-700";
+      case "delete course":
+        return "bg-red-600 hover:bg-red-700";
+      case "explore":
+        return "bg-blue-600 hover:bg-blue-700";
+      default:
+        return "bg-indigo-600 hover:bg-indigo-700"; // Default for "Enroll Now"
+    }
+  };
 
   return (
     <div className="container mx-auto p-20 bg-black">
@@ -45,7 +66,6 @@ export default function CourseCarousel({ fetchTopCourses = false, apiUrl }) {
               className="bg-white shadow-lg rounded-2xl overflow-hidden p-1 border-1 border-white"
             >
               {loading || error ? (
-                // Skeleton Placeholder
                 <>
                   <div className="w-full h-48 bg-gray-500 animate-pulse rounded-2xl"></div>
                   <div className="p-4">
@@ -56,7 +76,6 @@ export default function CourseCarousel({ fetchTopCourses = false, apiUrl }) {
                   </div>
                 </>
               ) : (
-                // Actual Course Data
                 <>
                   <motion.img
                     initial={{ scale: 1.1 }}
@@ -80,8 +99,13 @@ export default function CourseCarousel({ fetchTopCourses = false, apiUrl }) {
                       {new Date(course.startDate).toLocaleDateString()} -{" "}
                       {new Date(course.endDate).toLocaleDateString()}
                     </p>
-                    <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
-                      Enroll Now
+                    <button
+                      onClick={() => onButtonClick(course)}
+                      className={`${getButtonColor(
+                        buttonText
+                      )} text-white px-4 py-2 rounded-lg transition`}
+                    >
+                      {buttonText}
                     </button>
                   </div>
                 </>
@@ -90,6 +114,34 @@ export default function CourseCarousel({ fetchTopCourses = false, apiUrl }) {
           )
         )}
       </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-8 w-96 shadow-lg">
+            {modalContent || (
+              <p className="text-gray-700 text-center">No content provided</p>
+            )}
+            <div className="mt-4 flex justify-end">
+              <button
+                className="bg-gray-400 text-white px-4 py-2 rounded mr-2"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-600 text-white px-4 py-2 rounded"
+                onClick={() => {
+                  onButtonClick();
+                  setShowModal(false);
+                }}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
