@@ -4,11 +4,8 @@ import { motion } from "framer-motion";
 export default function CourseCarousel({
   fetchTopCourses = false,
   apiUrl,
-  buttonText = "Enroll Now",
-  onButtonClick = () => {},
-  showModal = false,
-  setShowModal = () => {},
-  modalContent = null,
+  buttonText = "Enroll Now", // Default button text
+  onButtonClick = () => {}, // Function to handle button actions
 }) {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +29,7 @@ export default function CourseCarousel({
       });
   }, [fetchTopCourses, apiUrl]);
 
-  // Button color logic
+  // Dynamically set button colors based on text
   const getButtonColor = (text) => {
     switch (text.toLowerCase()) {
       case "update course":
@@ -100,7 +97,7 @@ export default function CourseCarousel({
                       {new Date(course.endDate).toLocaleDateString()}
                     </p>
                     <button
-                      onClick={() => onButtonClick(course)}
+                      onClick={() => onButtonClick(course, buttonText)}
                       className={`${getButtonColor(
                         buttonText
                       )} text-white px-4 py-2 rounded-lg transition`}
@@ -114,34 +111,6 @@ export default function CourseCarousel({
           )
         )}
       </div>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-8 w-96 shadow-lg">
-            {modalContent || (
-              <p className="text-gray-700 text-center">No content provided</p>
-            )}
-            <div className="mt-4 flex justify-end">
-              <button
-                className="bg-gray-400 text-white px-4 py-2 rounded mr-2"
-                onClick={() => setShowModal(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-red-600 text-white px-4 py-2 rounded"
-                onClick={() => {
-                  onButtonClick();
-                  setShowModal(false);
-                }}
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
