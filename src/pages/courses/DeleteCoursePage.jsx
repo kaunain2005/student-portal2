@@ -5,11 +5,13 @@ import CourseCarousel from "../../components/HomeSections/CourseCarousel";
 const DeleteCoursePage = () => {
   return (
     <CourseCarousel
-      buttonText="Enroll Now"
-      onButtonClick={(course) => {
-        console.log("Enroll clicked for", course);
-      }}
-    />
+  buttonText="Delete Course"
+  onButtonClick={(course, buttonText) => {
+    console.log(`${buttonText} triggered for`, course);
+  }}
+  modalContent={<p>Are you sure you want to delete this course?</p>}
+/>
+
   );
 };
 

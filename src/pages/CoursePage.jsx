@@ -7,8 +7,8 @@ const CoursePage = () => {
       <HeroSection />
       <CourseCarousel
         buttonText="Enroll Now"
-        onButtonClick={(course) => {
-          console.log("Enroll clicked for", course);
+        onButtonClick={(course, buttonText) => {
+          console.log(`${buttonText} clicked for`, course);
         }}
       />
     </div>
