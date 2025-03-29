@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaUserCircle, FaSignOutAlt } from "react-icons/fa"; // User profile icon
-import { getToken, logout, getUser } from "../utils/auth"; // Import auth functions
+import { FaUserCircle, FaSignOutAlt, FaUserEdit } from "react-icons/fa";
+import { getToken, logout, getUser } from "../utils/auth";
 
 const Navbar = () => {
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    setIsAuthenticated(!!getToken()); // Check if user is logged in
+    setIsAuthenticated(!!getToken());
   }, []);
 
-  const user = getUser(); 
-  const userRole = user?.role || "user"; // Default to "user" if no role is found
+  const user = getUser();
+  const userRole = user?.role || "user";
 
   const handleLogout = () => {
     logout();
@@ -99,18 +100,55 @@ const Navbar = () => {
               </AnimatePresence>
             </div>
 
-            {/* // Inside JSX, show the Dashboard link only for admins */}
+            {/* Dashboard Link for Admins */}
             {userRole === "admin" && (
               <Link to="/dashboard" className="text-white hover:text-gray-300">
                 Dashboard
               </Link>
             )}
 
-            {/* Profile Icon (Only show if logged in) */}
+            {/* Profile Icon */}
             {isAuthenticated && (
-              <Link to="/profile" className="text-white hover:text-gray-300">
-                <FaUserCircle className="h-8 w-8" />
-              </Link>
+              <div className="relative">
+                <button
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className="flex items-center focus:outline-none"
+                >
+                  {user?.profilePic ? (
+                    <img
+                      src={user.profilePic}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full"
+                    />
+                  ) : (
+                    <FaUserCircle className="w-8 h-8 text-white" />
+                  )}
+                </button>
+                <AnimatePresence>
+                  {showDropdown && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-10"
+                    >
+                      <Link
+                        to="/profile"
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 transition"
+                      >
+                        <FaUserEdit className="mr-2" /> Profile
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center w-full text-left px-4 py-2 text-red-500 hover:bg-gray-200 transition"
+                      >
+                        <FaSignOutAlt className="mr-2" /> Logout
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             )}
 
             {/* Login/Logout Button */}
@@ -212,47 +250,27 @@ const Navbar = () => {
                   </AnimatePresence>
                 </div>
 
-                {/* Profile (Only show if logged in) */}
+                {/* Mobile Profile & Logout */}
                 {isAuthenticated && (
-                  <>
-                    {/* Profile Icon */}
+                  <div className="mt-4">
+                    <Link to="/profile" className="flex items-center text-white hover:bg-indigo-600 px-3 py-2 rounded-md transition duration-300">
+                      {user?.profilePic ? (
+                        <img src={user.profilePic} alt="Profile" className="w-8 h-8 rounded-full mr-2" />
+                      ) : (
+                        <FaUserCircle className="w-8 h-8 text-white mr-2" />
+                      )}
+                      Profile
+                    </Link>
                     <button
-                      onClick={() => setShowDropdown(!showDropdown)}
-                      className="flex items-center space-x-2 text-white bg-indigo-600 px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
+                      onClick={handleLogout}
+                      className="w-full mt-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
                     >
-                      <FaUserCircle className="text-2xl" />
-                      <span>Profile</span>
+                      Logout
                     </button>
-
-                    {/* Dropdown Menu */}
-                    {showDropdown && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-10">
-                        <Link
-                          to="/edit-profile"
-                          className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 transition"
-                        >
-                          <FaUserEdit className="mr-2" /> Edit Profile
-                        </Link>
-                        <button
-                          onClick={handleLogout}
-                          className="flex items-center w-full text-left px-4 py-2 text-red-500 hover:bg-gray-200 transition"
-                        >
-                          <FaSignOutAlt className="mr-2" /> Logout
-                        </button>
-                      </div>
-                    )}
-                  </>
+                  </div>
                 )}
 
-                {/* Login/Logout Button */}
-                {isAuthenticated ? (
-                  <button
-                    onClick={handleLogout}
-                    className="w-full bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
-                  >
-                    <FaSignOutAlt size={20} />
-                  </button>
-                ) : (
+                {!isAuthenticated && (
                   <Link
                     to="/login"
                     className="w-full text-center bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300 block"

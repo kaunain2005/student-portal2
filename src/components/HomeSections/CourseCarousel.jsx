@@ -42,15 +42,62 @@ export default function CourseCarousel({
         return "bg-indigo-600 hover:bg-indigo-700"; // Default for "Enroll Now"
     }
   };
+  // Dynamically set page title based on the button text
+  const getPageTitle = (text) => {
+    switch (text.toLowerCase()) {
+      case "update course":
+        return (
+          <>
+            <h2 className="text-3xl text-white font-bold text-center mb-5">
+              🪄 Update Course
+            </h2>
+            <hr />
+          </>
+        );
+      case "delete course":
+        return (
+          <>
+            <h2 className="text-3xl text-red-600 font-bold text-center mb-5">
+              🗑️ Delete Course
+            </h2>
+            <hr />
+          </>
+        );
+      case "explore":
+        return (
+          <>
+            <h2 className="text-3xl text-blue-600 font-bold text-center mb-5">
+              🔍 Explore Courses
+            </h2>
+            <hr />
+          </>
+        );
+      case "enroll now":
+        return (
+          <>
+            <h2 className="text-3xl text-blue-600 font-bold text-center mb-5">
+              🎓 Discover All Our Courses
+            </h2>
+            <hr />
+          </>
+        );
+      default:
+        return (
+          <h2 className="text-3xl text-indigo-600 font-bold text-center mb-15">
+            🚀 Explore & Level Up: Our Top Courses 🎯📚
+          </h2>
+        );
+    }
+  };
 
   return (
     <div className="container mx-auto p-20 bg-black">
       <h2 className="text-3xl text-white font-bold text-center mb-15">
         {fetchTopCourses
           ? "🚀 Explore & Level Up: Our Top Courses 🎯📚"
-          : "🎓 Discover All Our Courses"}
+          : getPageTitle(buttonText)}
       </h2>
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {(loading || error ? Array(3).fill({}) : courses).map(
           (course, index) => (
             <motion.div

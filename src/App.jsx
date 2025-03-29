@@ -15,7 +15,7 @@ import StudyLoader from "./components/StudyLoader";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ProfileCard from "./components/ProfileCard";
+// import ProfileCard from "./components/ProfileCard";
 import CoursePage from "./pages/CoursePage";
 import Dashboard from "./pages/Dashboard";
 import HomeDashboard from "./pages/CourseDashboard";
@@ -23,7 +23,7 @@ import HomeDashboard from "./pages/CourseDashboard";
 import AddCoursePage from "./pages/courses/AddCoursePage";
 import UpdateCoursePage from "./pages/courses/UpdateCoursePage";
 import DeleteCoursePage from "./pages/courses/DeleteCoursePage";
-
+import ProfilePage from "./components/ProfilePage";
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -53,18 +53,22 @@ function App() {
     return <StudyLoader />;
   }
 
-
   return (
     <Router>
       <Layout />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<ProfileCard />} />
+        {/* <Route path="/profile" element={<ProfileCard />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/course" element={<CoursePage />} />
 
         {/* Protected Routes */}
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        } />
         <Route
           path="/courses"
           element={
@@ -121,8 +125,8 @@ function App() {
               <DeleteCoursePage />
             </ProtectedRoute>
           }
-          />
-          {/* Course Managemnet Ends */}
+        />
+        {/* Course Managemnet Ends */}
         <Route
           path="/profile"
           element={

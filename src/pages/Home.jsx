@@ -24,7 +24,7 @@ const Home = () => {
       />
       </section>
       <AboutSection />
-      <CourseCarousel fetchTopCourses={true} apiUrl="http://localhost:5000/api/allcourses" />
+      <CourseCarousel fetchTopCourses={true} />
       <TestimonialSection />
       <QuizSection />
       <ContactSection />
