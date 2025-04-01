@@ -1,5 +1,5 @@
 import HeroSection from "../components/CourseSection/HeroSection";
-import CourseCarousel from "../components/HomeSections/CourseCarousel";
+import CourseCarousel from "../components/CourseSection/CourseCarousel";
 
 const CoursePage = () => {
   return (

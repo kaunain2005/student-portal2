@@ -2,7 +2,7 @@
 import React from "react";
 import HeroSection from "../components/HomeSections/HeroSection";
 import AboutSection from "../components/HomeSections/AboutSection";
-import CourseCarousel from "../components/HomeSections/CourseCarousel";
+import CourseCarousel from "../components/CourseSection/CourseCarousel";
 import TestimonialSection from "../components/HomeSections/TestimonialSection";
 import QuizSection from "../components/HomeSections/QuizSection";
 import ContactSection from "../components/HomeSections/ContactSection";
@@ -10,7 +10,6 @@ import ContactSection from "../components/HomeSections/ContactSection";
 import Footer from "../components/Footer";
 
 import ScrollVelocity from '../components/ui/ScrollVelocity'
-import UICard from "../components/ui/UICard";
 
 const Home = () => {
   return (

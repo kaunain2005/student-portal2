@@ -41,7 +41,12 @@ export default function Login() {
     >
       {/* Glassmorphic Form Container */}
       <motion.div
-        initial={{ opacity: 0, y: 50, scale: 0.8, backdropFilter: "blur(10px)" }}
+        initial={{
+          opacity: 0,
+          y: 50,
+          scale: 0.8,
+          backdropFilter: "blur(10px)",
+        }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="bg-black/30 backdrop-blur-lg text-white p-8 rounded-xl shadow-lg w-96 border border-white/30"
@@ -111,7 +116,11 @@ export default function Login() {
         {message && (
           <motion.p
             animate={{ opacity: 1, y: 0 }}
-            className="text-center text-green-500 mt-3 font-semibold"
+            className={`text-center mt-3 font-semibold ${
+              message === "Login successful!"
+                ? "text-green-500"
+                : "text-red-500"
+            }`}
           >
             {message}
           </motion.p>

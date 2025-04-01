@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaUserCircle, FaSignOutAlt, FaUserEdit } from "react-icons/fa";
@@ -11,10 +11,33 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     setIsAuthenticated(!!getToken());
   }, []);
+
+  // Close dropdown when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDropdown]);
 
   const user = getUser();
   const userRole = user?.role || "user";
@@ -107,9 +130,9 @@ const Navbar = () => {
               </Link>
             )}
 
-            {/* Profile Icon */}
+            {/* Profile Icon with Dropdown */}
             {isAuthenticated && (
-              <div className="relative">
+              <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="flex items-center focus:outline-none"
@@ -149,23 +172,6 @@ const Navbar = () => {
                   )}
                 </AnimatePresence>
               </div>
-            )}
-
-            {/* Login/Logout Button */}
-            {isAuthenticated ? (
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
-              >
-                Logout
-              </button>
-            ) : (
-              <Link
-                to="/login"
-                className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
-              >
-                Login
-              </Link>
             )}
           </div>
 
@@ -253,20 +259,21 @@ const Navbar = () => {
                 {/* Mobile Profile & Logout */}
                 {isAuthenticated && (
                   <div className="mt-4">
-                    <Link to="/profile" className="flex items-center text-white hover:bg-indigo-600 px-3 py-2 rounded-md transition duration-300">
+                    <Link
+                      to="/profile"
+                      className="flex items-center text-white hover:bg-indigo-600 px-3 py-2 rounded-md transition duration-300"
+                    >
                       {user?.profilePic ? (
-                        <img src={user.profilePic} alt="Profile" className="w-8 h-8 rounded-full mr-2" />
+                        <img
+                          src={user.profilePic}
+                          alt="Profile"
+                          className="w-8 h-8 rounded-full mr-2"
+                        />
                       ) : (
                         <FaUserCircle className="w-8 h-8 text-white mr-2" />
                       )}
                       Profile
                     </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full mt-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
-                    >
-                      Logout
-                    </button>
                   </div>
                 )}
 

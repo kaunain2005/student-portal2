@@ -24,9 +24,16 @@ import AddCoursePage from "./pages/courses/AddCoursePage";
 import UpdateCoursePage from "./pages/courses/UpdateCoursePage";
 import DeleteCoursePage from "./pages/courses/DeleteCoursePage";
 import ProfilePage from "./components/ProfilePage";
+import AboutPage from "./pages/AboutPage";
+import CourseDetailPage from "./pages/CourseDetailPage";
 
 const Layout = ({ children }) => {
   const location = useLocation();
+
+  //Ensures page start from top whenever page changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]); // Runs whenever the route changes
 
   // Hide Navbar on Login and Register pages
   const hideNavbarRoutes = ["/login", "/register"];
@@ -62,18 +69,30 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/course" element={<CoursePage />} />
+        <Route path="/about" element={<AboutPage />} />
 
         {/* Protected Routes */}
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <ProfilePage />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/courses"
           element={
             <ProtectedRoute>
               <Courses />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/course/:id"
+          element={
+            <ProtectedRoute>
+              <CourseDetailPage />
             </ProtectedRoute>
           }
         />
@@ -123,15 +142,6 @@ function App() {
           element={
             <ProtectedRoute>
               <DeleteCoursePage />
-            </ProtectedRoute>
-          }
-        />
-        {/* Course Managemnet Ends */}
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
             </ProtectedRoute>
           }
         />

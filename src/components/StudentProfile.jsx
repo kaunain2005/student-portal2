@@ -3,10 +3,10 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { getUser } from "../utils/auth";
 
-// Example SVG placeholder if no profilePic is provided
+// SVG placeholder if no profilePic is provided
 const DefaultStudentSVG = () => (
   <svg
-    className="w-24 h-24 text-gray-300"
+    className="w-32 h-32 text-gray-300"
     fill="currentColor"
     viewBox="0 0 24 24"
   >
@@ -16,6 +16,7 @@ const DefaultStudentSVG = () => (
 
 const StudentProfile = () => {
   const [profile, setProfile] = useState(null);
+  const [enrolledCoursesData, setEnrolledCoursesData] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -27,12 +28,9 @@ const StudentProfile = () => {
   });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
   const user = getUser();
 
-  // --------------------------
-  // Fetch Profile Data
-  // --------------------------
+  // Fetch profile data
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -40,9 +38,7 @@ const StudentProfile = () => {
           setError("No user data available");
           return;
         }
-        const res = await axios.get(
-          `http://localhost:5000/api/profile?userId=${user._id}`
-        );
+        const res = await axios.get(`http://localhost:5000/api/profile?userId=${user._id}`);
         setProfile(res.data);
         if (!editMode) {
           setFormData({
@@ -66,9 +62,27 @@ const StudentProfile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // --------------------------
-  // Handle Form Changes
-  // --------------------------
+  // Fetch enrolled courses details using a separate endpoint
+  useEffect(() => {
+    const fetchEnrolledCourses = async () => {
+      if (profile && profile.enrolledCourses && profile.enrolledCourses.length > 0) {
+        try {
+          // Convert course IDs to comma-separated string
+          const ids = profile.enrolledCourses.join(",");
+          const res = await axios.get(`http://localhost:5000/api/coursesbyids?ids=${ids}`);
+          setEnrolledCoursesData(res.data);
+        } catch (err) {
+          console.error("Failed to fetch enrolled courses:", err.response || err);
+        }
+      } else {
+        setEnrolledCoursesData([]);
+      }
+    };
+
+    fetchEnrolledCourses();
+  }, [profile]);
+
+  // Handle form changes in edit mode
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -76,9 +90,7 @@ const StudentProfile = () => {
     }));
   };
 
-  // --------------------------
-  // Submit Profile Updates
-  // --------------------------
+  // Submit profile updates
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -89,10 +101,7 @@ const StudentProfile = () => {
           .map((course) => course.trim())
           .filter((course) => course !== ""),
       };
-      const res = await axios.put(
-        `http://localhost:5000/api/update-profile?userId=${user._id}`,
-        updatedData
-      );
+      const res = await axios.put(`http://localhost:5000/api/update-profile?userId=${user._id}`, updatedData);
       setMessage("Profile updated successfully!");
       setProfile(res.data.user);
       setEditMode(false);
@@ -102,9 +111,6 @@ const StudentProfile = () => {
     }
   };
 
-  // --------------------------
-  // Render Logic
-  // --------------------------
   if (error)
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -120,180 +126,175 @@ const StudentProfile = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 pt-15">
+    <div className="min-h-screen bg-gray-100 p-6 pt-16">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl font-bold text-gray-700 text-center mb-6 "
+        className="text-3xl font-bold text-gray-700 text-center mb-8"
       >
-        My Profile Dashboard
+        Profile Dashboard
       </motion.h2>
 
-
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 grid-">
-        {/* LEFT CARD: MY PROFILE */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow p-6 relative"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold text-gray-800">My profile</h3>
-            {editMode ? null : (
-              <button
-                onClick={() => setEditMode(true)}
-                className="text-sm bg-indigo-600 text-white px-3 py-1 rounded-md hover:bg-indigo-700 transition"
-              >
-                Edit
-              </button>
-            )}
-          </div>
-
-          {editMode ? (
-            <form onSubmit={handleUpdate} className="space-y-4">
-              {/* Name */}
-              <div>
-                <label className="block mb-1 text-gray-600 font-medium">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  required
-                />
-              </div>
-
-              {/* Mobile */}
-              <div>
-                <label className="block mb-1 text-gray-600 font-medium">
-                  Mobile Number
-                </label>
-                <input
-                  type="text"
-                  name="mobNumber"
-                  value={formData.mobNumber}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                />
-              </div>
-
-              {/* Class */}
-              <div>
-                <label className="block mb-1 text-gray-600 font-medium">
-                  Class
-                </label>
-                <input
-                  type="text"
-                  name="class"
-                  value={formData.class}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                />
-              </div>
-
-              {/* College */}
-              <div>
-                <label className="block mb-1 text-gray-600 font-medium">
-                  College Name
-                </label>
-                <input
-                  type="text"
-                  name="collegeName"
-                  value={formData.collegeName}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                />
-              </div>
-
-              {/* Profile Pic */}
-              <div>
-                <label className="block mb-1 text-gray-600 font-medium">
-                  Profile Picture URL
-                </label>
-                <input
-                  type="text"
-                  name="profilePic"
-                  value={formData.profilePic}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                />
-              </div>
-
-              {/* Enrolled Courses */}
-              <div>
-                <label className="block mb-1 text-gray-600 font-medium">
-                  Enrolled Courses (comma separated)
-                </label>
-                <input
-                  type="text"
-                  name="enrolledCourses"
-                  value={formData.enrolledCourses}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                />
-              </div>
-
-              {/* Buttons */}
-              <div className="flex justify-end space-x-3 mt-4">
-                <button
-                  type="submit"
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setEditMode(false)}
-                  className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500 transition"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          ) : (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-xl mx-auto bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-lg"
+      >
+        {editMode ? (
+          <motion.form
+            onSubmit={handleUpdate}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
             <div>
-              <div className="flex flex-col items-center mb-4">
-                {profile.profilePic ? (
-                  <img
-                    src={profile.profilePic}
-                    alt="Student Profile"
-                    className="w-20 h-20 rounded-full mb-2 object-cover"
-                  />
-                ) : (
-                  <DefaultStudentSVG />
-                )}
-                <p className="text-gray-700 font-medium">{profile.name}</p>
-                <p className="text-sm text-gray-500">{profile.email}</p>
-              </div>
-              <ul className="text-sm space-y-1 text-gray-600">
-                <li>
-                  <strong>Mobile:</strong> {profile.mobNumber || "Not Provided"}
-                </li>
-                <li>
-                  <strong>Class:</strong> {profile.class || "Not Provided"}
-                </li>
-                <li>
-                  <strong>College:</strong>{" "}
-                  {profile.collegeName || "Not Provided"}
-                </li>
-                <li>
-                  <strong>Courses:</strong>{" "}
-                  {profile.enrolledCourses && profile.enrolledCourses.length > 0
-                    ? profile.enrolledCourses.join(", ")
-                    : "None"}
-                </li>
-              </ul>
-              {message && (
-                <p className="text-sm text-green-600 mt-2">{message}</p>
-              )}
+              <label className="block text-gray-700 font-medium mb-2">Full Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+              />
             </div>
-          )}
-        </motion.div>
-
-      </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">Mobile Number</label>
+              <input
+                type="text"
+                name="mobNumber"
+                value={formData.mobNumber}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">Class</label>
+              <input
+                type="text"
+                name="class"
+                value={formData.class}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">College Name</label>
+              <input
+                type="text"
+                name="collegeName"
+                value={formData.collegeName}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">Profile Picture URL</label>
+              <input
+                type="text"
+                name="profilePic"
+                value={formData.profilePic}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-gray-700 font-medium mb-2">
+                Enrolled Courses (comma separated)
+              </label>
+              <input
+                type="text"
+                name="enrolledCourses"
+                value={formData.enrolledCourses}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div className="md:col-span-2 flex justify-end space-x-6 mt-4">
+              <motion.button
+                type="submit"
+                whileHover={{ scale: 1.05 }}
+                className="bg-indigo-600 text-white px-8 py-3 rounded-md hover:bg-indigo-700 transition"
+              >
+                Save Changes
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={() => setEditMode(false)}
+                whileHover={{ scale: 1.05 }}
+                className="bg-gray-400 text-white px-8 py-3 rounded-md hover:bg-gray-500 transition"
+              >
+                Cancel
+              </motion.button>
+            </div>
+          </motion.form>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-gray-800"
+          >
+            <div className="flex flex-col items-center text-center">
+              {profile.profilePic ? (
+                <img
+                  src={profile.profilePic}
+                  alt="Student Profile"
+                  className="w-32 h-32 rounded-full mb-4 object-cover"
+                />
+              ) : (
+                <DefaultStudentSVG />
+              )}
+              <p className="text-xl font-semibold">{profile.name}</p>
+              <p className="text-sm text-gray-500">{profile.email}</p>
+            </div>
+            <div className="mt-6 grid grid-cols-1 gap-4 text-gray-700">
+              <div>
+                <span className="font-medium">Mobile Number: </span>
+                <span>{profile.mobNumber || "Not Provided"}</span>
+              </div>
+              <div>
+                <span className="font-medium">Class: </span>
+                <span>{profile.class || "Not Provided"}</span>
+              </div>
+              <div>
+                <span className="font-medium">College Name: </span>
+                <span>{profile.collegeName || "Not Provided"}</span>
+              </div>
+            </div>
+            {/* Display enrolled courses as cards */}
+            {enrolledCoursesData.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold mb-4">Enrolled Courses</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {enrolledCoursesData.map((course) => (
+                    <div
+                      key={course._id}
+                      className="bg-white p-4 rounded-lg shadow flex flex-col items-center"
+                    >
+                      <img
+                        src={course.image}
+                        alt={course.title}
+                        className="w-full h-32 object-cover rounded"
+                      />
+                      <h4 className="text-lg font-bold mt-2">{course.title}</h4>
+                      <p className="text-sm text-gray-600">{course.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="flex justify-center mt-8">
+              <motion.button
+                onClick={() => setEditMode(true)}
+                whileHover={{ scale: 1.05 }}
+                className="bg-indigo-600 text-white px-8 py-3 rounded-md hover:bg-indigo-700 transition"
+              >
+                Edit Profile
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </motion.div>
     </div>
   );
 };
