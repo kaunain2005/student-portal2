@@ -9,29 +9,35 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+// Replace this with your real course data
 const data = [
-  { month: "Jun", sales: 20000 },
-  { month: "Jul", sales: 40000 },
-  { month: "Aug", sales: 15000 },
-  { month: "Sep", sales: 30000 },
-  { month: "Oct", sales: 50000 },
-  { month: "Nov", sales: 35000 },
-  { month: "Dec", sales: 40000 },
+  { course: "Python", students: 120 },
+  { course: "ReactJS", students: 200 },
+  { course: "Data Science", students: 150 },
+  { course: "Machine Learning", students: 180 },
+  { course: "Web Dev", students: 220 },
+  { course: "Java", students: 160 },
+  { course: "C++", students: 140 },
 ];
 
-const SalesChart = () => {
+const StudentChart = () => {
   return (
     <div className="w-full h-full bg-white p-6 rounded-lg shadow-lg">
-      <h2 className="text-xl font-bold mb-2">Sales Statistics</h2>
-      <p className="text-green-500 font-semibold">$110,854.21 +10%</p>
+      <h2 className="text-xl font-bold mb-2">Course Enrollment Stats</h2>
+      <p className="text-green-500 font-semibold">Total Students: 1,170</p>
       <div className="w-full h-[250px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
+            <XAxis dataKey="course" />
             <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="sales" stroke="#4CAF50" strokeWidth={2} />
+            <Line
+              type="monotone"
+              dataKey="students"
+              stroke="#4CAF50"
+              strokeWidth={2}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -39,4 +45,4 @@ const SalesChart = () => {
   );
 };
 
-export default SalesChart;
+export default StudentChart;

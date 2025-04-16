@@ -9,13 +9,11 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Courses from "./pages/Courses";
 import Quizzes from "./pages/Quizzes";
-import Profile from "./pages/Profile";
 import PageNotFound from "./pages/PageNotFound";
 import StudyLoader from "./components/StudyLoader";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
-// import ProfileCard from "./components/ProfileCard";
 import CoursePage from "./pages/CoursePage";
 import Dashboard from "./pages/Dashboard";
 import HomeDashboard from "./pages/CourseDashboard";
@@ -26,6 +24,7 @@ import DeleteCoursePage from "./pages/courses/DeleteCoursePage";
 import ProfilePage from "./components/ProfilePage";
 import AboutPage from "./pages/AboutPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
+import GeminiChatbot from "./pages/GeminiChatbot";
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -77,6 +76,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chatbot"
+          element={
+            <ProtectedRoute>
+              <GeminiChatbot />
             </ProtectedRoute>
           }
         />

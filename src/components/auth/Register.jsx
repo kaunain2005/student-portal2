@@ -86,7 +86,7 @@ export default function Register() {
             className="w-full p-3 border border-transparent rounded-lg bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all duration-300"
           >
             <option value="student" className="bg-zinc-700">Student</option>
-            <option value="admin" className="bg-zinc-700">Teacher</option>
+            <option value="teacher" className="bg-zinc-700">Teacher</option>
           </motion.select>
           <motion.button
             whileHover={{ scale: 0.99 }}

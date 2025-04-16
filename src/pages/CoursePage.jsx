@@ -1,9 +1,10 @@
 import HeroSection from "../components/CourseSection/HeroSection";
 import CourseCarousel from "../components/CourseSection/CourseCarousel";
+import Footer from "../components/Footer";
 
 const CoursePage = () => {
   return (
-    <div>
+    <>
       <HeroSection />
       <CourseCarousel
         buttonText="Enroll Now"
@@ -11,7 +12,8 @@ const CoursePage = () => {
           console.log(`${buttonText} clicked for`, course);
         }}
       />
-    </div>
+      <Footer />
+    </>
   );
 };
 

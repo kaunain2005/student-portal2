@@ -139,8 +139,6 @@ export default function CourseCarousel({
       alert("Enrollment failed. Please try again.");
     }
   };
-  
-  
 
   const handleUnenroll = async (course) => {
     try {

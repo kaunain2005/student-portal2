@@ -29,12 +29,6 @@ const StatsCard = ({ title, value, percentage, icon, color }) => {
         <motion.p className="text-2xl text-zinc-600 font-bold" whileHover={{ scale: 1.02 }}>
           {value}
         </motion.p>
-        <motion.p
-          className={`${percentage > 0 ? "text-green-500" : "text-red-500"} text-sm`}
-          whileHover={{ scale: 1.02 }}
-        >
-          {percentage > 0 ? `▲ ${percentage}%` : `▼ ${percentage}%`}
-        </motion.p>
       </div>
     </motion.div>
   );

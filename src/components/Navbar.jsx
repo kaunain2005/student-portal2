@@ -48,12 +48,6 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  const courses = [
-    { name: "FY", path: "/courses/fy" },
-    { name: "SY", path: "/courses/sy" },
-    { name: "TY", path: "/courses/ty" },
-  ];
-
   return (
     <motion.nav
       initial={{ backdropFilter: "blur(10px)" }}
@@ -85,43 +79,6 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-
-            {/* Courses Dropdown */}
-            <div
-              onMouseEnter={() => setIsCoursesOpen(true)}
-              onMouseLeave={() => setIsCoursesOpen(false)}
-              className="relative"
-            >
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                className="text-white hover:text-gray-300 transition duration-300"
-              >
-                Courses
-              </motion.button>
-              <AnimatePresence>
-                {isCoursesOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 mt-3 w-48 bg-gradient-to-b from-zinc-800 to-zinc-800 backdrop-blur-md rounded-lg shadow-lg"
-                  >
-                    <div className="py-2">
-                      {courses.map((course, index) => (
-                        <Link
-                          key={index}
-                          to={course.path}
-                          className="block px-4 py-2 text-white hover:bg-indigo-600 transition duration-300"
-                        >
-                          {course.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
 
             {/* Dashboard Link for Admins */}
             {userRole === "admin" && (
