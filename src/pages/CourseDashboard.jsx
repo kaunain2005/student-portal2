@@ -130,27 +130,6 @@ const HomeDashboard = () => {
             </motion.div>
           </Link>
         ))}
-
-        {/* Section 4 - Growth Chart */}
-        <motion.div
-          className="bg-white p-5 rounded-lg row-span-2 shadow-lg flex flex-col items-center cursor-pointer"
-          whileHover={{
-            scale: 1.02,
-            boxShadow: "0px 5px 15px rgba(0,0,0,0.2)",
-          }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Link to="/dashboard/section1" className="w-full h-full">
-            {/* <SalesChart /> */}
-            <h2 className="text-gray-600 text-lg md:text-3xl font-semibold">
-              Courses
-            </h2>
-            <GrowthChart />
-          </Link>
-        </motion.div>
-
         {/* section 5 */}
         <motion.div
           className="bg-gray-700 rounded-lg col-span-3 row-span-2 flex flex-col items-center justify-center text-white font-bold w-full h-full"
@@ -161,37 +140,8 @@ const HomeDashboard = () => {
           </Link>
         </motion.div>
 
-        {/* section 3 */}
-        <motion.div
-          className="bg-gray-700 p-6 rounded-lg flex items-center justify-center text-white text-xl font-bold"
-          whileHover={{ scale: 1.02 }}
-        >
-          <Link to="/dashboard/section3">3</Link>
-        </motion.div>
-        <motion.div
-          className="bg-gray-700 p-6 rounded-lg flex items-center justify-center text-white text-xl font-bold"
-          whileHover={{ scale: 1.02 }}
-        >
-          <Link to="/dashboard/section4">4</Link>
-        </motion.div>
-        <motion.div
-          className="bg-gray-700 p-6 rounded-lg flex items-center justify-center text-white text-xl font-bold"
-          whileHover={{ scale: 1.02 }}
-        >
-          <Link to="/dashboard/section5">5</Link>
-        </motion.div>
-        <motion.div
-          className="bg-gray-700 p-6 rounded-lg col-span-2 flex items-center justify-center text-white text-xl font-bold"
-          whileHover={{ scale: 1.02 }}
-        >
-          <Link to="/dashboard/section6">6</Link>
-        </motion.div>
       </motion.div>
 
-      {/* Nested Routes */}
-      <div className="mt-6">
-        <Outlet />
-      </div>
     </div>
   );
 };

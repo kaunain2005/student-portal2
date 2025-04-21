@@ -38,7 +38,9 @@ const StudentProfile = () => {
           setError("No user data available");
           return;
         }
-        const res = await axios.get(`http://localhost:5000/api/profile?userId=${user._id}`);
+        const res = await axios.get(
+          `http://localhost:5000/api/profile?userId=${user._id}`
+        );
         setProfile(res.data);
         if (!editMode) {
           setFormData({
@@ -65,14 +67,23 @@ const StudentProfile = () => {
   // Fetch enrolled courses details using a separate endpoint
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
-      if (profile && profile.enrolledCourses && profile.enrolledCourses.length > 0) {
+      if (
+        profile &&
+        profile.enrolledCourses &&
+        profile.enrolledCourses.length > 0
+      ) {
         try {
           // Convert course IDs to comma-separated string
           const ids = profile.enrolledCourses.join(",");
-          const res = await axios.get(`http://localhost:5000/api/coursesbyids?ids=${ids}`);
+          const res = await axios.get(
+            `http://localhost:5000/api/coursesbyids?ids=${ids}`
+          );
           setEnrolledCoursesData(res.data);
         } catch (err) {
-          console.error("Failed to fetch enrolled courses:", err.response || err);
+          console.error(
+            "Failed to fetch enrolled courses:",
+            err.response || err
+          );
         }
       } else {
         setEnrolledCoursesData([]);
@@ -101,7 +112,10 @@ const StudentProfile = () => {
           .map((course) => course.trim())
           .filter((course) => course !== ""),
       };
-      const res = await axios.put(`http://localhost:5000/api/update-profile?userId=${user._id}`, updatedData);
+      const res = await axios.put(
+        `http://localhost:5000/api/update-profile?userId=${user._id}`,
+        updatedData
+      );
       setMessage("Profile updated successfully!");
       setProfile(res.data.user);
       setEditMode(false);
@@ -148,7 +162,9 @@ const StudentProfile = () => {
             className="grid grid-cols-1 md:grid-cols-2 gap-6"
           >
             <div>
-              <label className="block text-gray-700 font-medium mb-2">Full Name</label>
+              <label className="block text-gray-700 font-medium mb-2">
+                Full Name
+              </label>
               <input
                 type="text"
                 name="name"
@@ -159,7 +175,9 @@ const StudentProfile = () => {
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-2">Mobile Number</label>
+              <label className="block text-gray-700 font-medium mb-2">
+                Mobile Number
+              </label>
               <input
                 type="text"
                 name="mobNumber"
@@ -169,7 +187,9 @@ const StudentProfile = () => {
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-2">Class</label>
+              <label className="block text-gray-700 font-medium mb-2">
+                Class
+              </label>
               <input
                 type="text"
                 name="class"
@@ -179,7 +199,9 @@ const StudentProfile = () => {
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-2">College Name</label>
+              <label className="block text-gray-700 font-medium mb-2">
+                College Name
+              </label>
               <input
                 type="text"
                 name="collegeName"
@@ -189,15 +211,33 @@ const StudentProfile = () => {
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-2">Profile Picture URL</label>
+              <label className="block text-gray-700 font-medium mb-2">
+                Profile Picture
+              </label>
               <input
-                type="text"
-                name="profilePic"
-                value={formData.profilePic}
-                onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const localUrl = URL.createObjectURL(file);
+                    setFormData((prev) => ({
+                      ...prev,
+                      profilePic: localUrl,
+                    }));
+                  }
+                }}
+                className="w-full p-2 border border-gray-300 rounded-md"
               />
+              {formData.profilePic && (
+                <img
+                  src={formData.profilePic}
+                  alt="Preview"
+                  className="mt-2 h-24 w-24 object-cover rounded-full border"
+                />
+              )}
             </div>
+
             <div className="md:col-span-2">
               <label className="block text-gray-700 font-medium mb-2">
                 Enrolled Courses (comma separated)
@@ -277,7 +317,9 @@ const StudentProfile = () => {
                         className="w-full h-32 object-cover rounded"
                       />
                       <h4 className="text-lg font-bold mt-2">{course.title}</h4>
-                      <p className="text-sm text-gray-600">{course.description}</p>
+                      <p className="text-sm text-gray-600">
+                        {course.description}
+                      </p>
                     </div>
                   ))}
                 </div>

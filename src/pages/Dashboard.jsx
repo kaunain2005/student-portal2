@@ -11,7 +11,7 @@ import Footer from "../components/Footer";
 
 const Dashboard = () => {
   const [studentCount, setStudentCount] = useState(0);
-  
+
   useEffect(() => {
     const fetchStudentCount = async () => {
       try {
@@ -115,13 +115,6 @@ const Dashboard = () => {
             </Link>
           </motion.div>
 
-          {/* section 3 */}
-          <motion.div
-            className="bg-gray-700 p-6 rounded-lg flex items-center justify-center text-white text-xl font-bold"
-            whileHover={{ scale: 1.02 }}
-          >
-            <Link to="/dashboard/section3">3</Link>
-          </motion.div>
         </motion.div>
       </div>
       <Footer />
